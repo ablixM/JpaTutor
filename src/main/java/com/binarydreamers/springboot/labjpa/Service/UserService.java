@@ -1,5 +1,6 @@
 package com.binarydreamers.springboot.labjpa.Service;
 
+import com.binarydreamers.springboot.labjpa.DTO.LoginResponse;
 import com.binarydreamers.springboot.labjpa.Model.Role;
 import com.binarydreamers.springboot.labjpa.Model.UserNotFoundException;
 import com.binarydreamers.springboot.labjpa.Model.User;
@@ -63,7 +64,7 @@ public class    UserService implements UserDetailsService {
         );
     }
 
-    public User loginUser(String email, String password) {
+    public LoginResponse loginUser(String email, String password) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new IllegalArgumentException("User not found with email: " + email));
 
@@ -72,10 +73,7 @@ public class    UserService implements UserDetailsService {
             UserDetails userDetails = loadUserByUsername(email);
             String token = jwtUtil.generateToken(userDetails);
 
-            // Set the token in the user object (optional, if you want to include it in the response)
-            user.setToken(token);
-
-            return user; // Return the User object
+            return new LoginResponse(user, token); // Return custom response object
         } else {
             throw new IllegalArgumentException("Invalid password");
         }

@@ -14,7 +14,6 @@ public class GlobalExceptionHandler {
         error.setStatus(HttpStatus.NOT_FOUND.value());
         error.setMessage(ex.getMessage());
         error.setTimeStamp(System.currentTimeMillis());
-
         return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
     }
 }

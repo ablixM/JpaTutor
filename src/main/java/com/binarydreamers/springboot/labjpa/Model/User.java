@@ -26,8 +26,6 @@ public class User implements UserDetails {
 
 
 
-    private String token;
-
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
@@ -70,19 +68,13 @@ public class User implements UserDetails {
 
     @Override
     public String getUsername() {
-        return "";
+        return null;
     }
 
     public void setPassword(String password) {
         this.password = password;
     }
 
-    public String getToken() {
-        return token;
-    }
-    public void setToken(String token) {
-        this.token = token;
-    }
 
     public Set<Role> getRoles() {
         return roles;
@@ -94,7 +86,6 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        // Ensure the role is prefixed with "ROLE_"
         return Collections.singletonList(new SimpleGrantedAuthority(roles.iterator().next().getName()));
     }
 

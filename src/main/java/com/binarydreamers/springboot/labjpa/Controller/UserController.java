@@ -1,7 +1,9 @@
 package com.binarydreamers.springboot.labjpa.Controller;
 import com.binarydreamers.springboot.labjpa.DTO.LoginRequest;
+import com.binarydreamers.springboot.labjpa.DTO.LoginResponse;
 import com.binarydreamers.springboot.labjpa.Model.User;
 import com.binarydreamers.springboot.labjpa.Service.UserService;
+import com.binarydreamers.springboot.labjpa.Util.JwtUtil;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -13,9 +15,11 @@ import java.util.List;
 public class UserController {
 
     private final UserService userService;
+    private final JwtUtil jwtUtil;
 
-    public UserController(UserService userService) {
+    public UserController(UserService userService, JwtUtil jwtUtil) {
         this.userService = userService;
+        this.jwtUtil = jwtUtil;
     }
     @GetMapping("/users")
     public ResponseEntity<List<User>> getAllUsers() {
@@ -50,14 +54,13 @@ public class UserController {
             String email = loginRequest.getEmail();
             String password = loginRequest.getPassword();
 
-            User user = userService.loginUser(email, password);
+            LoginResponse loginResponse = userService.loginUser(email, password);
 
-            return ResponseEntity.ok(user);
+            return ResponseEntity.ok(loginResponse); // Return the custom response object
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
-
 
 
     @PutMapping("/update/{id}")
